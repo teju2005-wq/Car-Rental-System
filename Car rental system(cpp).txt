@@ -1,0 +1,109 @@
+#include <iostream>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+class Customer {
+public:
+    string name, phone, email, address, vehicle, category;
+    int cost, days;
+
+    void inputCustomerDetails();
+    int calculateCost(int rate, int days) {
+        return rate * days;
+    }
+};
+
+void Customer::inputCustomerDetails() {
+    // Entering customer details
+    do {
+        cout << "ENTER YOUR NAME: ";
+        getline(cin, name);
+        if (name.length() < 3 || name.length() > 30) {
+            cout << "Invalid name. Please enter a valid name.\n";
+        }
+    } while (name.length() < 3 || name.length() > 30);
+
+    do {
+        cout << "ENTER YOUR MOBILE NUMBER: ";
+        cin >> phone;
+        if (phone.length() != 10 || !isdigit(phone[0])) {
+            cout << "Invalid phone number. Please enter a valid 10-digit number.\n";
+        }
+    } while (phone.length() != 10 || !isdigit(phone[0]));
+
+    do {
+        cout << "ENTER YOUR EMAIL: ";
+        cin >> email;
+        if (email.find("@gmail.com") == string::npos) {
+            cout << "Invalid email. Please enter a valid Gmail address.\n";
+        }
+    } while (email.find("@gmail.com") == string::npos);
+
+    cin.ignore(); // Clear the buffer
+    cout << "ENTER YOUR ADDRESS: ";
+    getline(cin, address);
+}
+
+void bookCar() {
+    Customer customer;
+    customer.inputCustomerDetails();
+
+    int cityChoice, carChoice, categoryChoice;
+    int carRates[3][3] = {
+        {1600, 1800, 2000}, // SUV Rates
+        {1100, 1300, 1500}, // Hatchback & Sedan Rates
+        {2100, 2300, 2500}  // MPV Rates
+    };
+
+    cout << "\nCHOOSE YOUR CITY:\n";
+    cout << "1) Bengaluru\n2) Hyderabad\n3) Vijayawada\n4) Others\n";
+    cin >> cityChoice;
+
+    if (cityChoice == 4) {
+        cout << "SERVICES NOT AVAILABLE. Exiting...\n";
+        return;
+    }
+
+    cout << "\nNUMBER OF DAYS OF HIRING: ";
+    cin >> customer.days;
+
+    cout << "\nCHOOSE VEHICLE CATEGORY:\n";
+    cout << "1) SUV\n2) Hatchback & Sedan\n3) MPV\n";
+    cin >> categoryChoice;
+
+    string categories[] = {"SUV", "Hatchback & Sedan", "MPV"};
+    string vehicles[3][3] = {
+        {"Vitara Brezza", "Hyundai Creta", "Kia Seltos"},
+        {"Nexa Baleno", "Honda City", "Tata Altroz"},
+        {"Ertiga", "Innova", "Kia Carnival"}
+    };
+
+    cout << "\nCHOOSE YOUR VEHICLE:\n";
+    for (int i = 0; i < 3; i++) {
+        cout << i + 1 << ") " << vehicles[categoryChoice - 1][i] << "\n";
+    }
+    cin >> carChoice;
+
+    customer.category = categories[categoryChoice - 1];
+    customer.vehicle = vehicles[categoryChoice - 1][carChoice - 1];
+    customer.cost = customer.calculateCost(carRates[categoryChoice - 1][carChoice - 1], customer.days);
+
+    cout << "\n--- RECEIPT ---\n";
+    cout << "CUSTOMER'S NAME: " << customer.name << "\n";
+    cout << "CONTACT NUMBER: " << customer.phone << "\n";
+    cout << "EMAIL: " << customer.email << "\n";
+    cout << "ADDRESS: " << customer.address << "\n";
+    cout << "CATEGORY: " << customer.category << "\n";
+    cout << "VEHICLE: " << customer.vehicle << "\n";
+    cout << "DAYS OF HIRING: " << customer.days << "\n";
+    cout << "TOTAL COST: Rs." << customer.cost << "\n";
+}
+
+int main() {
+    cout << "\nWELCOME TO APEX VEHICLE RENTAL AGENCY\n";
+    bookCar();
+    cout << "\nTHANK YOU FOR CHOOSING APEX VEHICLE RENTAL AGENCY!\n";
+    return 0;
+}
